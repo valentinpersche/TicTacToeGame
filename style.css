@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap');
+
+body {
+    background-color: #323232;
+    font-family: 'Open Sans', sans-serif;
+    margin: 0;
+    color: white;
+}
+
+#content{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 200px;
+}
+
+h1{
+    text-align: center;
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+table {
+    border-collapse: collapse;
+    border: none;
+}
+
+td {
+    width: 150px;
+    height: 150px;
+    border: 5px solid white;
+    text-align: center;
+    font-size: 24px;
+    cursor: pointer;
+    color: white;
+}
+
+/* Entfernt die äußeren Ränder der Tabelle */
+td:first-child {
+    border-left: none;
+}
+
+td:last-child {
+    border-right: none;
+}
+
+tr:first-child td {
+    border-top: none;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+td:hover {
+    background-color: #404040;
+}
