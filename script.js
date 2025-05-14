@@ -1,14 +1,28 @@
 let fields = [
-    "circle",
-    "cross",
-    "circle",
-    "cross",
-    "circle",
-    "cross",
-    "circle",
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
     null,
     null,
 ]
+
+let currentPlayer = 'circle'; // circle beginnt
+
+// Gewinnkombinationen
+const winningCombinations = [
+    [0, 1, 2], // horizontal
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6], // vertikal
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8], // diagonal
+    [2, 4, 6]
+];
 
 function init(){
     render();
@@ -37,6 +51,78 @@ function render(){
     content.innerHTML = tableHTML;
 }
 
+function handleClick(index) {
+    if (fields[index] === null) {
+        fields[index] = currentPlayer;
+        let td = document.getElementsByTagName('td')[index];
+        
+        if (currentPlayer === 'circle') {
+            td.innerHTML = generateCircleSVG();
+            currentPlayer = 'cross';
+        } else {
+            td.innerHTML = generateCrossSVG();
+            currentPlayer = 'circle';
+        }
+        
+        td.removeAttribute('onclick');
+        checkWinner();
+    }
+}
+
+function checkWinner() {
+    for (let combination of winningCombinations) {
+        const [a, b, c] = combination;
+        if (fields[a] && fields[a] === fields[b] && fields[a] === fields[c]) {
+            drawWinningLine(combination);
+            return true;
+        }
+    }
+    return false;
+}
+
+function calculateCellPositions(combination, cells, table) {
+    return combination.map(index => {
+        const cell = cells[index];
+        const rect = cell.getBoundingClientRect();
+        const tableRect = table.getBoundingClientRect();
+        return {
+            x: rect.left + rect.width / 2 - tableRect.left,
+            y: rect.top + rect.height / 2 - tableRect.top
+        };
+    });
+}
+
+function createAnimatedLine(startPos, endPos) {
+    return `
+        <line x1="${startPos.x}" y1="${startPos.y}" x2="${endPos.x}" y2="${endPos.y}"
+              stroke="#ff0059"
+              stroke-width="5"
+              stroke-dasharray="1000"
+              stroke-dashoffset="1000">
+            <animate attributeName="stroke-dashoffset"
+                     from="1000"
+                     to="0"
+                     dur="0.5s"
+                     fill="freeze"/>
+        </line>
+    `;
+}
+
+function drawWinningLine(combination) {
+    const table = document.querySelector('table');
+    const cells = table.getElementsByTagName('td');
+    const positions = calculateCellPositions(combination, cells, table);
+    
+    const svgHTML = `
+        <svg style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;">
+            ${createAnimatedLine(positions[0], positions[2])}
+        </svg>
+    `;
+    
+    table.style.position = "relative";
+    table.insertAdjacentHTML('beforeend', svgHTML);
+}
+
 function generateCircleSVG() {
     const svg = `
         <svg width="70" height="70" viewBox="0 0 70 70">
@@ -49,7 +135,7 @@ function generateCircleSVG() {
                 <animate attributeName="stroke-dashoffset"
                          from="188.5"
                          to="0"
-                         dur="0.4s"
+                         dur="0.3s"
                          fill="freeze"/>
             </circle>
         </svg>
@@ -60,26 +146,26 @@ function generateCircleSVG() {
 function generateCrossSVG() {
     const svg = `
         <svg width="70" height="70" viewBox="0 0 70 70">
-            <line x1="15" y1="15" x2="55" y2="55"
+            <line x1="5" y1="5" x2="65" y2="65"
                   stroke="#FFC000"
                   stroke-width="5"
-                  stroke-dasharray="56.57"
-                  stroke-dashoffset="56.57">
+                  stroke-dasharray="84.85"
+                  stroke-dashoffset="84.85">
                 <animate attributeName="stroke-dashoffset"
-                         from="56.57"
+                         from="84.85"
                          to="0"
-                         dur="0.2s"
+                         dur="0.15s"
                          fill="freeze"/>
             </line>
-            <line x1="55" y1="15" x2="15" y2="55"
+            <line x1="65" y1="5" x2="5" y2="65"
                   stroke="#FFC000"
                   stroke-width="5"
-                  stroke-dasharray="56.57"
-                  stroke-dashoffset="56.57">
+                  stroke-dasharray="84.85"
+                  stroke-dashoffset="84.85">
                 <animate attributeName="stroke-dashoffset"
-                         from="56.57"
+                         from="84.85"
                          to="0"
-                         dur="0.2s"
+                         dur="0.15s"
                          fill="freeze"
                          begin="0.2s"/>
             </line>

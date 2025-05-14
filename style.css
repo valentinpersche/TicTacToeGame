@@ -20,6 +20,18 @@ h1{
     margin-bottom: 20px;
 }
 
+.tic{
+    color: #00B0EF;
+}   
+
+.tac{
+    color: #ff0059;
+}
+
+.toe{
+    color: #FFC000;
+}
+
 table {
     border-collapse: collapse;
     border: none;
@@ -54,4 +66,5 @@ tr:last-child td {
 
 td:hover {
     background-color: #404040;
+    cursor: pointer;
 }
