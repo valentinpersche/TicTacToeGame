@@ -26,6 +26,7 @@ const winningCombinations = [
 
 function init(){
     render();
+    updatePlayerSwitch();
 }
 
 function render(){
@@ -51,6 +52,26 @@ function render(){
     content.innerHTML = tableHTML;
 }
 
+function updatePlayerSwitch() {
+    const switchElement = document.getElementById('currentPlayerSwitch');
+    const isCircle = currentPlayer === 'circle';
+    
+    switchElement.innerHTML = `
+        <div class="player-switch ${isCircle ? 'circle-turn' : 'cross-turn'}">
+            <div class="switch-content">
+                <div class="player-icon circle-icon">
+                    ${generateCircleSVG()}
+                    <span class="player-name">Player One</span>
+                </div>
+                <div class="player-icon cross-icon">
+                    ${generateCrossSVG()}
+                    <span class="player-name">Player Two</span>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
 function handleClick(index) {
     if (fields[index] === null) {
         fields[index] = currentPlayer;
@@ -65,6 +86,7 @@ function handleClick(index) {
         }
         
         td.removeAttribute('onclick');
+        updatePlayerSwitch();
         checkWinner();
     }
 }
@@ -80,15 +102,40 @@ function checkWinner() {
     return false;
 }
 
+function getLineType(combination) {
+    if (combination[0] === 0 && combination[2] === 8 || combination[0] === 2 && combination[2] === 6) {
+        return 'diagonal';
+    }
+    if (combination[0] === 0 && combination[2] === 6 || combination[0] === 1 && combination[2] === 7 || combination[0] === 2 && combination[2] === 8) {
+        return 'vertical';
+    }
+    return 'horizontal';
+}
+
 function calculateCellPositions(combination, cells, table) {
-    return combination.map(index => {
+    const lineType = getLineType(combination);
+    const offset = lineType === 'diagonal' ? 15 : 20;
+    
+    return combination.map((index, i) => {
         const cell = cells[index];
         const rect = cell.getBoundingClientRect();
         const tableRect = table.getBoundingClientRect();
-        return {
-            x: rect.left + rect.width / 2 - tableRect.left,
-            y: rect.top + rect.height / 2 - tableRect.top
-        };
+        const x = rect.left + rect.width / 2 - tableRect.left;
+        const y = rect.top + rect.height / 2 - tableRect.top;
+        
+        if (i === 0) {
+            return {
+                x: lineType === 'vertical' ? x : x - offset,
+                y: lineType === 'horizontal' ? y : y - offset
+            };
+        }
+        if (i === 2) {
+            return {
+                x: lineType === 'vertical' ? x : x + offset,
+                y: lineType === 'horizontal' ? y : y + offset
+            };
+        }
+        return { x, y };
     });
 }
 
