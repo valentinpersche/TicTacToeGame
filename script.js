@@ -52,6 +52,13 @@ function renderResetButton() {
   };
 }
 
+function resetGame() {
+  fields = [null, null, null, null, null, null, null, null, null];
+  currentPlayer = "circle";
+  render();
+  updatePlayerSwitch();
+}
+
 function updatePlayerSwitch() {
   const switchElement = document.getElementById("currentPlayerSwitch");
   const isCircle = currentPlayer === "circle";
@@ -123,24 +130,37 @@ function calculateCellPositions(combination, cells, table) {
   const lineType = getLineType(combination);
   const offset = lineType === "diagonal" ? 15 : 20;
 
+  // Prüfe, ob es die Diagonale von unten links nach oben rechts ist
+  const isReverseDiagonal = combination[0] === 2 && combination[2] === 6;
+
   return combination.map((index, i) => {
     const cell = cells[index];
     const rect = cell.getBoundingClientRect();
     const tableRect = table.getBoundingClientRect();
-    const x = rect.left + rect.width / 2 - tableRect.left;
-    const y = rect.top + rect.height / 2 - tableRect.top;
+    let x = rect.left + rect.width / 2 - tableRect.left;
+    let y = rect.top + rect.height / 2 - tableRect.top;
 
     if (i === 0) {
-      return {
-        x: lineType === "vertical" ? x : x - offset,
-        y: lineType === "horizontal" ? y : y - offset,
-      };
+      if (lineType === "diagonal" && isReverseDiagonal) {
+        return { x: x + offset, y: y - offset };
+      } else if (lineType === "diagonal") {
+        return { x: x - offset, y: y - offset };
+      } else if (lineType === "vertical") {
+        return { x, y: y - offset };
+      } else if (lineType === "horizontal") {
+        return { x: x - offset, y };
+      }
     }
     if (i === 2) {
-      return {
-        x: lineType === "vertical" ? x : x + offset,
-        y: lineType === "horizontal" ? y : y + offset,
-      };
+      if (lineType === "diagonal" && isReverseDiagonal) {
+        return { x: x - offset, y: y + offset };
+      } else if (lineType === "diagonal") {
+        return { x: x + offset, y: y + offset };
+      } else if (lineType === "vertical") {
+        return { x, y: y + offset };
+      } else if (lineType === "horizontal") {
+        return { x: x + offset, y };
+      }
     }
     return { x, y };
   });
@@ -237,18 +257,5 @@ function generateResetSVG() {
     `;
 }
 
-function renderResetButton() {
-  const resetButton = document.getElementById("resetButton");
-  resetButton.innerHTML = `<button class="reset-btn" id="resetBtnSVG">${generateResetSVG()}</button>`;
-  const btn = document.getElementById("resetBtnSVG");
-  btn.onclick = function () {
-    resetGame();
-  };
-}
 
-function resetGame() {
-  fields = [null, null, null, null, null, null, null, null, null];
-  currentPlayer = "circle";
-  render();
-  updatePlayerSwitch();
-}
+

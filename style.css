@@ -5,21 +5,29 @@ body {
   font-family: "Open Sans", sans-serif;
   margin: 0;
   color: white;
+  min-height: 100vh;
+  min-height: 100svh;
 }
 
 #content {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   margin-top: 35px;
-  padding: 0 20px;
+}
+
+#content table {
+  box-sizing: border-box;
+  margin-top: 0;
+  padding-top: 0;
 }
 
 h1 {
   text-align: center;
   font-size: 48px;
   margin-bottom: 0;
-  margin-top: 15px;
+  padding-top: 15px;
+  margin-top: 0;
 }
 
 .tic {
@@ -32,6 +40,9 @@ h1 {
 
 .toe {
   color: #ffc000;
+}
+
+.game-container {
 }
 
 .currentPlayerSwitch {
@@ -107,9 +118,9 @@ h1 {
 table {
   border-collapse: collapse;
   border: none;
-  width: 100%;
-  max-width: 450px;
+  max-width: 500px;
   aspect-ratio: 1/1;
+  display: flex;
 }
 
 td {
@@ -169,7 +180,7 @@ td svg {
 }
 
 /* Media Queries für verschiedene Bildschirmgrößen */
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 550px) {
   h1 {
     font-size: 48px;
   }
@@ -198,60 +209,80 @@ td svg {
     height: 35px;
   }
 
+  .reset-btn:hover {
+    background-color: inherit;
+  }
+
+  td {
+    width: 135px;
+    height: 135px;
+  }
+
+  td:hover {
+    background-color: inherit;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  h1 {
+    font-size: 48px;
+  }
+
+  #content {
+    padding: 0 20px;
+  }
+
+  .reset-btn svg {
+    width: 50px;
+    height: 50px;
+  }
+
+  td {
+    width: 115px;
+    height: 115px;
+  }
+
+  td svg {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+@media screen and (max-width: 400px) {
   td {
     width: 100px;
     height: 100px;
   }
 }
 
-@media screen and (max-width: 375px) {
-  h1 {
-    font-size: 48px;
-    margin-top: 25px;
-  }
-
-  #content {
-    padding: 0 20px;
-    margin-top: 50px;
-  }
-
-  .currentPlayerSwitch {
-    margin-top: 25px;
-  }
-
-  .player-switch {
-    width: 220px;
-    padding: 8px;
-  }
-
-  .switch-content {
-    margin-left: 25px;
-    margin-right: 25px;
-  }
-
-  .player-icon {
-    width: 40px;
-    height: 40px;
-  }
-
-  .player-icon svg {
-    width: 30px;
-    height: 30px;
-  }
-
-  .player-name {
-    font-size: 10px;
-  }
-
+@media screen and (max-width: 380px) {
   td {
     width: 80px;
     height: 80px;
   }
 
   td svg {
-    width: 55px;
-    height: 55px;
+    width: 45px;
+    height: 45px;
+  }
+
+  .player-switch {
+    width: 250px;
+    padding: 10px;
+  }
+
+  .switch-content {
+    margin-left: 30px;
+    margin-right: 30px;
+  }
+
+  .player-icon {
+    width: 60px;
+    height: 60px;
+  }
+
+  .player-icon svg {
+    width: 30px;
+    height: 30px;
   }
 }
-
-
